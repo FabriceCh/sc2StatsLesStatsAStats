@@ -1,4 +1,4 @@
-Observation,Joueur,Cote,Race,Age,Ratio All,Parties All,Wins All,Ratio P,Parties P,Wins P,Ratio T,Parties T,Wins T,Ratio Z,Parties Z,Wins Z,,,,,,,,,
+Observation,Joueur,Cote,Race,Age,Ratio All,PartiesAll,WinsAll,RatioP,PartiesP,WinsP,RatioT,PartiesT,WinsT,RatioZ,PartiesZ,WinsZ
 1,Innovation,2707,T,24,0.6754,2089,1411,0.6536,765,500,0.6591,575,379,0.7103,749,532
 2,Neeb,2706,P,19,0.6903,2057,1420,0.7041,490,345,0.6798,662,450,0.6896,902,622
 3,GuMiho,2662,T,25,0.6291,3648,2295,0.6416,1208,775,0.6173,1168,721,0.6276,1270,797

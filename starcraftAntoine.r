@@ -1,3 +1,5 @@
+install.packages("gplots")
+
 setwd("C:/Users/fabrice/Documents/GitHub/sc2StatsLesStatsAStats")
 donnee <- read.csv("ExcelJoueurs.csv", header = TRUE, sep = ",")
 noms <- donnee$Joueur
@@ -12,12 +14,12 @@ races <- donnee$Race
 
 #SECTION AGE / RATIO DE VICTOIRE
 ratioAge <- aggregate(donnee[6], list(Age=ages), mean)
-Age <- ratioAge$Age
-RatioVsAll <- ratioAge$Ratio.All
+Age <- donnee$Age
+RatioVsAll <- donnee$Ratio.All
 
 reg.lin <- lm(RatioVsAll~Age, data=ratioAge)
 
-plot(Age, RatioVsAll, col="blue", main="Ratio de victoire selon l'age et droite de régression", xlab="Age", ylab="Ratio de victoire")
+plot(Age, RatioVsAll, col="blue", pch=16, main="Ratio de victoire selon l'âge des joueurs", xlab="Age", ylab="Ratio de victoire")
 abline(reg.lin, col="red")
 
 #Analyse de la régression linéaire
@@ -25,13 +27,15 @@ summary(reg.lin)
 confint(reg.lin, level =.90)
 anova(reg.lin)
 
+donneeAgeRatio <- donnee[,c("Age","Ratio.All")]
+
 
 #SECTION NB DE PARTIES JOUÉES / RATIO DE VICTOIRE
 partiesJouees <- donnee$PartiesAll
 ratioVictoire <- donnee$Ratio.All
 regLinParties <- lm(ratioVictoire~partiesJouees, data=donnee)
 
-plot(partiesJouees, ratioVictoire, col="blue", main="Ratio de victoire selon le nombre de parties jouées", xlab="Parties jouées", ylab="Ratio de victoire")
+plot(partiesJouees, ratioVictoire, pch=16, col="blue", main="Ratio de victoire selon le nombre de parties jouées", xlab="Parties jouées", ylab="Ratio de victoire")
 abline(regLinParties, col="red")
 
 summary(regLinParties)
@@ -48,7 +52,17 @@ plot(ages, ratios,                                # x variable, y variable
 
 legend (x = 15, y = 0.7, legend = levels(donnee$Race), col = c(1:3), pch = 16)
 
-barplot(table(races))
+donneeZerg <- subset(donnee, races == 'Z')
+donneeTerran <- subset(donnee, races == 'T')
+donneeProtoss <- subset(donnee, races == 'P')
+
+regLinZerg <- lm(Ratio.All~Age, data=donneeZerg)
+regLinTerran <- lm(Ratio.All~Age, data=donneeTerran)
+regLinProtoss <- lm(Ratio.All~Age, data=donneeProtoss)
+
+abline(regLinZerg, col="green")
+abline(regLinTerran, col="red")
+abline(regLinProtoss, col="black")
 
 mean(ages)
 
@@ -66,4 +80,3 @@ hist(ratiosz,col="midnightblue",main="Histogramme ratioz",
 
 hist(ratiost,col="midnightblue",main="Histogramme ratiot", 
      border="red", xlab="ages",ylab="Effectif")
-

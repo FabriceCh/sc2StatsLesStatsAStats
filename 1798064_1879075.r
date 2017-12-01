@@ -109,6 +109,17 @@ anova(reg.lin)
 
 donneeAgeRatio <- donnee[,c("Age","Ratio.All")]
 
+
+#SECTION NB DE PARTIES JOUÉES / RATIO DE VICTOIRE
+partiesJouees <- donnee$PartiesAll
+ratioVictoire <- donnee$Ratio.All
+regLinParties <- lm(ratioVictoire~partiesJouees, data=donnee)
+
+plot(partiesJouees, ratioVictoire, pch=16, col="blue", main="Ratio de victoire selon le nombre de parties jouées", xlab="Parties jouées", ylab="Ratio de victoire")
+abline(regLinParties, col="red")
+
+summary(regLinParties)
+
 ##################################################
 
 
@@ -142,8 +153,7 @@ stdpartiesJouees<-sqrt(var(partiesJouees))
 curve(dnorm(x, mean=mpartiesJouees, sd=stdpartiesJouees), 
       col="darkblue", lwd=2, add=TRUE, yaxt="n")
 
-
-
+#Analyse avec chi-deux
 
 ##################################################
 

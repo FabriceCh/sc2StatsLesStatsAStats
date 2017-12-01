@@ -154,6 +154,8 @@ curve(dnorm(x, mean=mpartiesJouees, sd=stdpartiesJouees),
       col="darkblue", lwd=2, add=TRUE, yaxt="n")
 
 #Analyse avec chi-deux
+donneeChiDeuxAge <- read.csv("ageRatioChiDeux.csv", header = TRUE, sep = ";")
+chisq.test(donneeChiDeuxAge)
 
 ##################################################
 

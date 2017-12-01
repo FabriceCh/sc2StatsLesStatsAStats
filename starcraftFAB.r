@@ -18,7 +18,7 @@ CalculerStats <- function(x) {
 }
 
 
-setwd("C:/Users/fabrice/Documents/GitHub/sc2StatsLesStatsAStats")
+setwd("C:/Users/Fabri/Onedrive/Documents/GitHub/sc2StatsLesStatsAStats")
 donnee <- read.csv("ExcelJoueurs.csv", header = TRUE, sep = ",")
 noms <- donnee$Joueur
 ages <- donnee$Age
@@ -80,12 +80,7 @@ sd(ages)/mean(ages)
 sd(ratios)/mean(ratios)
 sd(partiesJouees)/mean(partiesJouees)
 
-#histogrammes
-hist(ratios,col="midnightblue",main="Histogramme ratios", 
-     border="red", xlab="ratio",ylab="Effectif")
 
-hist(ages,col="midnightblue",main="Histogramme ages", 
-     border="red", xlab="ages",ylab="Effectif")
 
 hist(ratiosp,col="midnightblue",main="Histogramme ratiop", 
      border="red", xlab="ages",ylab="Effectif")
@@ -150,5 +145,51 @@ CalculerStats(donneeTerran$Ratio.All)
 CalculerStats(donneeZerg$Age)
 CalculerStats(donneeProtoss$Age)
 CalculerStats(donneeTerran$Age)
+
+#SECTION PARAMÈTRES
+#tests de shapiro pour vérifier si les données suivent une loi normale
+shapiro.test(ages)
+shapiro.test(ratios)
+shapiro.test(partiesJouees)
+
+#histogrammes
+hist(ratios,col="skyblue1",main="Ratios de victoires", 
+     border="black", xlab="ratio",ylab="Effectif")
+m<-mean(ratios)
+std<-sqrt(var(ratios))
+curve(dnorm(x, mean=m, sd=std), 
+      col="darkblue", lwd=2, add=TRUE, yaxt="n")
+
+hist(ages,col="skyblue1",main="Ages", 
+     border="black", xlab="ages",ylab="Effectif")
+mages<-mean(ages)
+stdages<-sqrt(var(ages))
+curve(dnorm(x, mean=mages, sd=stdages), 
+      col="darkblue", lwd=2, add=TRUE, yaxt="n")
+
+hist(partiesJouees,col="skyblue1",main="Nombre de parties jouées", 
+     border="black", xlab="ages",ylab="Effectif")
+mpartiesJouees<-mean(partiesJouees)
+stdpartiesJouees<-sqrt(var(partiesJouees))
+curve(dnorm(x, mean=mpartiesJouees, sd=stdpartiesJouees), 
+      col="darkblue", lwd=2, add=TRUE, yaxt="n")
+
+#test du khi-deux pour voir si des variables dépendent l'une de l'autre
+x_tbl <- table(partiesJouees)
+x_val <- as.numeric(names(x_tbl))
+x_df <- data.frame(count=as.numeric(x_tbl), value=x_val)
+
+# Expand to fill in "gaps" in the values caused by 0 counts
+all_x_val <- data.frame(value = 0:max(x_val))
+x_df <- merge(all_x_val, x_df, by="value", all.x=TRUE)
+x_df$count[is.na(x_df$count)] <- 0
+
+# Get theoretical probabilities 
+x_df$eprob <- dgeom(x_df$val, 0.2)
+
+# Chi-square test: once with asymptotic dist'n, 
+# once with bootstrap evaluation of chi-sq test statistic
+chisq.test(x=x_df$count, p=x_df$eprob, rescale.p=TRUE)
+
 
 

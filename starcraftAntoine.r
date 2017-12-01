@@ -1,6 +1,6 @@
 install.packages("gplots")
 
-setwd("C:/Users/fabrice/Documents/GitHub/sc2StatsLesStatsAStats")
+setwd("C:/Users/Fabri/OneDrive/Documents/GitHub/sc2StatsLesStatsAStats")
 donnee <- read.csv("ExcelJoueurs.csv", header = TRUE, sep = ",")
 noms <- donnee$Joueur
 ages <- donnee$Age
@@ -48,7 +48,7 @@ plot(ages, ratios,                                # x variable, y variable
      cex = 2,                                     # size of point to use
      xlab = "Age",                                # x axis label
      ylab = "Ratio de victoires",                 # y axis label
-     main = "Ratio de victoires selon la race")    # plot title
+     main = "Ratio de victoires selon l'âge pour chaque race")    # plot title
 
 legend (x = 15, y = 0.7, legend = levels(donnee$Race), col = c(1:3), pch = 16)
 
@@ -63,6 +63,10 @@ regLinProtoss <- lm(Ratio.All~Age, data=donneeProtoss)
 abline(regLinZerg, col="green")
 abline(regLinTerran, col="red")
 abline(regLinProtoss, col="black")
+
+summary(regLinZerg)
+summary(regLinTerran)
+summary(regLinProtoss)
 
 mean(ages)
 

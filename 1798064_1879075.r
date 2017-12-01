@@ -1,9 +1,18 @@
-#fonction pour calculer le mode (https://stackoverflow.com/questions/2547402/is-there-a-built-in-function-for-finding-the-mode)
+##################################################
+#Antoine Daigneault-Demers et Fabrice Charbonneau
+##################################################
+
+
+##################################################
+#Fonctions
+
+#calcule le mode d'une variable
 Mode <- function(x) {
   ux <- unique(x)
   ux[which.max(tabulate(match(x, ux)))]
 }
 
+#calcule et affiche des statistiques descriptives d'une seule variable
 CalculerStats <- function(x) {
   
   print(min(x))
@@ -16,9 +25,19 @@ CalculerStats <- function(x) {
   print(sd(x))
   print(sd(x)/mean(x))
 }
+##################################################
+
+install.packages("gplots")
 
 
-setwd("C:/Users/Fabri/Onedrive/Documents/GitHub/sc2StatsLesStatsAStats")
+##################################################
+#working directory
+setwd("C:/Users/fabrice/Documents/GitHub/sc2StatsLesStatsAStats") #À modifier...
+##################################################
+
+
+##################################################
+#setup des données
 donnee <- read.csv("ExcelJoueurs.csv", header = TRUE, sep = ",")
 noms <- donnee$Joueur
 ages <- donnee$Age
@@ -28,92 +47,14 @@ ratiosz <- donnee$RatioZ
 ratiost <- donnee$RatioT
 partiesJouees <- donnee$PartiesAll
 races <- donnee$Race
-
-#STATISTIQUE DESCRIPTIVE
-
-barplot(table(races))
-
-#minimum
-min(ages)
-min(ratios)
-min(partiesJouees)
-
-#maximum
-max(ages)
-max(ratios)
-max(partiesJouees)
-
-#moyennes
-mean(ages)
-mean(ratios)
-mean(partiesJouees)
-
-#mediannes
-median(ages)
-median(ratios)
-median(partiesJouees)
-
-#modes
-
-Mode(ages)
-Mode(ratios)
-Mode(partiesJouees)
-
-#étendues
-max(ages)-min(ages)
-max(ratios)-min(ratios)
-max(partiesJouees)-min(partiesJouees)
-
-#variances
-var(ages)
-var(ratios)
-var(partiesJouees)
-
-#écarts-type
-sd(ages)
-sd(ratios)
-sd(partiesJouees)
-
-#coefficient de variation
-sd(ages)/mean(ages)
-sd(ratios)/mean(ratios)
-sd(partiesJouees)/mean(partiesJouees)
+##################################################
 
 
-
-hist(ratiosp,col="midnightblue",main="Histogramme ratiop", 
-     border="red", xlab="ages",ylab="Effectif")
-
-hist(ratiosz,col="midnightblue",main="Histogramme ratioz", 
-     border="red", xlab="ages",ylab="Effectif")
-
-hist(ratiost,col="midnightblue",main="Histogramme ratiot", 
-     border="red", xlab="ages",ylab="Effectif")
-
-
-ratioAge <- aggregate(ratios, list(Age=ages), mean)
-ratioPartie <- aggregate(ratios, list(partiesJouees), mean)
-
-plot(ratioAge)
-plot(ratioPartie)
-
-f <- approxfun(ratios, ages)
-
-
-lines(f, col="red")
-
-#diagramme |----[][]------|
-boxplot(ratios, main="Ratios")
-boxplot(ages, main="Ages")
-boxplot(partiesJouees, main="Parties jouées")
-
-qqline(partiesJouees, col="red", lwd=2)
-
-qqnorm(partiesJouees, main="nombre de parties jouées")
-
-
-
-
+##################################################
+#Statistiques descriptives
+CalculerStats(ages)
+CalculerStats(ratios)
+CalculerStats(partiesJouees)
 
 #Analyse de chaque race séparée:
 donneeZerg <- subset(donnee, races == 'Z')
@@ -144,6 +85,35 @@ CalculerStats(donneeZerg$Age)
 CalculerStats(donneeProtoss$Age)
 CalculerStats(donneeTerran$Age)
 
+####Graphiques###
+barplot(table(races))
+
+#diagramme |----[][]------|
+boxplot(ratios, main="Ratios")
+boxplot(ages, main="Ages")
+boxplot(partiesJouees, main="Parties jouées")
+
+#SECTION AGE / RATIO DE VICTOIRE
+Age <- donnee$Age
+RatioVsAll <- donnee$Ratio.All
+
+reg.lin <- lm(RatioVsAll~Age, data=donnee)
+
+plot(Age, RatioVsAll, col="blue", pch=16, main="Ratio de victoire selon l'âge des joueurs", xlab="Age", ylab="Ratio de victoire")
+abline(reg.lin, col="red")
+
+#Analyse de la régression linéaire
+summary(reg.lin)
+confint(reg.lin, level =.90)
+anova(reg.lin)
+
+donneeAgeRatio <- donnee[,c("Age","Ratio.All")]
+
+##################################################
+
+
+
+##################################################
 #SECTION PARAMÈTRES
 #tests de shapiro pour vérifier si les données suivent une loi normale
 shapiro.test(ages)
@@ -172,22 +142,23 @@ stdpartiesJouees<-sqrt(var(partiesJouees))
 curve(dnorm(x, mean=mpartiesJouees, sd=stdpartiesJouees), 
       col="darkblue", lwd=2, add=TRUE, yaxt="n")
 
-#test du khi-deux pour voir si des variables dépendent l'une de l'autre
-x_tbl <- table(partiesJouees)
-x_val <- as.numeric(names(x_tbl))
-x_df <- data.frame(count=as.numeric(x_tbl), value=x_val)
 
-# Expand to fill in "gaps" in the values caused by 0 counts
-all_x_val <- data.frame(value = 0:max(x_val))
-x_df <- merge(all_x_val, x_df, by="value", all.x=TRUE)
-x_df$count[is.na(x_df$count)] <- 0
 
-# Get theoretical probabilities 
-x_df$eprob <- dgeom(x_df$val, 0.2)
 
-# Chi-square test: once with asymptotic dist'n, 
-# once with bootstrap evaluation of chi-sq test statistic
-chisq.test(x=x_df$count, p=x_df$eprob, rescale.p=TRUE)
+##################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
